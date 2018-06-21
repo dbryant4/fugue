@@ -1,0 +1,35 @@
+sudo: required
+
+language: python
+
+env:
+  global:
+    - PYTHONDONTWRITEBYTECODE=1
+    - GOSS_PATH=../goss
+    - CONTAINER_IMAGE=dbryant4/fugue_app
+
+services:
+  - docker
+
+jobs:
+  include:
+    - stage: Acceptance Tests
+      script: docker run -v ${PWD}/app:/app -e PYTHONPATH=/app python:2.7  bash -c "pip install -r /app/requirements.txt -r /app/tests/requirements.txt && pytest -v /app/tests"
+    - stage: Build Container Image
+      script:
+        - wget -O goss https://github.com/aelsabbahy/goss/releases/download/v0.3.6/goss-linux-amd64
+        - chmod +rx goss
+        - wget -O dgoss https://raw.githubusercontent.com/aelsabbahy/goss/v0.3.6/extras/dgoss/dgoss
+        - chmod +rx dgoss
+        - cd app
+        - docker build -t ${CONTAINER_IMAGE}:${TRAVIS_BUILD_NUMBER} .
+        - ../dgoss run ${CONTAINER_IMAGE}:${TRAVIS_BUILD_NUMBER}
+        - echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin
+        - docker push ${CONTAINER_IMAGE}:${TRAVIS_BUILD_NUMBER}
+    - stage: Deploy Container Image
+      if: tag =~ /^v\d+\.\d+\.\d+$/
+      script:
+        - echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin
+        - docker pull ${CONTAINER_IMAGE}:${TRAVIS_BUILD_NUMBER}
+        - docker tag ${CONTAINER_IMAGE}:${TRAVIS_BUILD_NUMBER} ${CONTAINER_IMAGE}:latest
+        - docker push ${CONTAINER_IMAGE}:latest

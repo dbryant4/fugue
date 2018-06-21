@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <meta>
+        <meta charset="UTF-8">
+        <title>Fugue App</title>
+    </meta>
+
+    <body>
+
+        <link rel="stylesheet" href="bootstrap.min.css">
+        <script src="jquery-3.3.1.slim.min.js"></script>
+        <script src="popper.min.js"></script>
+        <script src="bootstrap.min.js"></script>
+
+        <div id="fugue-app" class="container">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <a class="navbar-brand" href="#">Fugue App</a>
+            </nav>
+            <div class="row" style="height: 50px">
+            </div>
+            <div class="row">
+                <div class="col-ms" style="padding: 40px">
+                    <button type="button"
+                            class="btn btn-primary btn-lg"
+                            v-on:click="toggleImage">
+                        Toggle Image
+                    </button>
+                </div>
+                <div class="col-ms" style="padding: 40px">
+                    <div v-if="showImage">
+                        <img src="conductor.png" width="340px" alt="Image Missing">
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="padding-top: 50px">
+                <div class="col-sm">
+                    <h2>Fugue Conductor</h2>
+                    <p>
+                        Fugue’s Conductor is the orchestration engine that provisions and
+                        instantiates infrastructure specified by definition files. Each file
+                        runs on the Conductor as a process that can be suspended, resumed, or
+                        killed similar to OS processes.
+                    </p>
+                </div>
+                <div class="col-sm">
+                    <h2>Fugue Composer</h2>
+                    <p>
+                        Fugue Composer is an application that scans your AWS accounts
+                        and generates an accurate visualization of your cloud
+                        infrastructure resources and their relationships.
+                    </p>
+                </div>
+                <div class="col-sm">
+                    <h2>Compliance Validation</h2>
+                    <p>
+                        Fugue applies content libraries as policy as code to validate
+                        whether infrastructure is in compliance with regulations or
+                        standards such as NIST 800-53, HIPAA, CIS Benchmark, and GDPR.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <script src="vue.js"></script>
+
+        <script>
+        new Vue({
+            el: "#fugue-app",
+            data() {
+                return {
+                    showImage: false,
+                }
+            },
+            methods: {
+                toggleImage: function() {
+                    this.showImage = !this.showImage;
+                }
+            }
+        });
+        </script>
+
+    </body>
+</html>

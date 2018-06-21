@@ -1,0 +1,20 @@
+file:
+  /app/app.py:
+    exists: true
+  /app/static:
+    exists: true
+    filetype: directory
+port:
+  tcp:80:
+    listening: true
+    ip:
+    - 0.0.0.0
+process:
+  python:
+    running: true
+http:
+  http://localhost/health:
+    status: 200
+    timeout: 5000
+    body:
+      - '{"status":"Ok"}'
